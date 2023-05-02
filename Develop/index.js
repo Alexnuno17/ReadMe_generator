@@ -1,4 +1,7 @@
 // TODO: Include packages needed for this application
+const inquirer = require('inquirer');
+const fs = require('fs');
+const genMd = require('./utils/generateMarkdown.js');
 
 // TODO: Create an array of questions for user input
 const questions =  [
@@ -11,15 +14,7 @@ const questions =  [
    { 
     type: 'input',
     name: 'description',
-    message: 'Please provide a description of your project.',
     message: 'Please provide a brief description of your project.',
-    validate: (value)=>{if (value){return true} else {return "Input is required to continue."}}
-  },
-  { 
-    type: 'checkbox',
-    message: 'What sections would you like to include in your table of contents?',
-    name: 'tableOfContents',
-    choices: ['Installation', 'Usage', 'Credits', 'License', 'Contributing', 'Tests', 'Questions'],
     validate: (value)=>{if (value){return true} else {return "Input is required to continue."}}
   },
 { 
@@ -45,7 +40,7 @@ const questions =  [
     message: 'What license would you like to choose for your project?',
     name: 'license',
   },
-  {choices: ['MIT', 'Apache-2.0', 'Boost', 'GNU GPL v2', 'GNU GPL v3', 'BSD 2-Clause License', 'BSD 3-Clause License', 'ISC', 'Mozilla Public License 2.0', 'N/A'],
+  {choices: ['MIT License', 'Apache-2.0 License', 'Boost Software License', 'GNU General Public License v2', 'GNU General Public License v3', 'BSD 2-Clause License', 'BSD 3-Clause License', 'ISC License', 'Mozilla Public License 2.0', 'N/A'],
     validate: (value)=>{if (value){return true} else {return "Input is required to continue."}}
   },
   { 
@@ -77,35 +72,23 @@ const questions =  [
 
 
 // TODO: Create a function to write README file
-// function writeToFile(fileName, data) {
-//   fs.writeFile(fileName, data, (err) => {
-//     if (err) {
-//       console.log("Error", err);
-//       return;
-//     }
-//     console.log("success");
-//   });
-// }
-
-// TODO: Create a function to initialize app
-function init()  {
-    inquirer.prompt(questions)
-    .then(({
-      title,
-      description,
-      tableOfContents,
-      installation,
-      usage,
-      credits,
-      license,
-      contributing,
-      tests,
-      email,
-      username,
-    })=>{
-  
-    }) 
+function writeToFile(fileName, data) {
+    fs.writeFile(fileName, data, (err) => {
+      if (err) {
+        console.log("Error", err);
+        return;
+      }
+      console.log("Your README has been successfully generated!");
+    });
   }
+  inquirer.prompt(questions).then((answers) => {
+
+    writeToFile("./example/README.md", genMd.generateMarkdown(answers));
+  });
+// TODO: Create a function to initialize app
+function init()  {}
+    
+  
 
 // Function call to initialize app
 init();
